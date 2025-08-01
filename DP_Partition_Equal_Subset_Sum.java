@@ -41,7 +41,7 @@ public class DP_Partition_Equal_Subset_Sum {
                 dp[j] = dp[j] || dp[j - number];
             }
 
-        }
+        } 
         return dp[target];
     }
 
