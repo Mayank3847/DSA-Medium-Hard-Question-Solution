@@ -60,11 +60,70 @@ public class DP_Minimum_Coins {
         return dp[idx][target] = Math.min(taken, notTaken);
     }
 
+    public static int minimumCoinsSpaceOpti(int arr[], int target) {
+        int n = arr.length;
+        int prev[] = new int[target + 1];
+        int curr[] = new int[target + 1];
+        for (int i = 0; i <= target; i++) {
+            if (i % arr[0] == 0) {
+                prev[i] = i / arr[0];
+            } else {
+                prev[i] = (int) Math.pow(10, 9);
+            }
+        }
+        for (int i = 1; i < n; i++) {
+            for (int j = 0; j <= target; j++) {
+                int notTaken = 0 + prev[j];
+                int taken = (int) Math.pow(10, 9);
+                if (arr[i] <= j) {
+                    taken = 1 + curr[j - arr[i]];
+                }
+                curr[j] = Math.min(notTaken, taken);
+
+            }
+            prev = curr;
+        }
+        int ans = prev[target];
+        if (ans >= (int) Math.pow(10, 9)) {
+            return -1;
+        }
+        return ans;
+    }
+
+    public static int minimumCoinsTab(int arr[], int target) {
+        int n = arr.length;
+        int dp[][] = new int[n][target + 1];
+        for (int i = 0; i <= target; i++) {
+            if (i % arr[0] == 0) {
+                dp[0][i] = i / arr[0];
+            } else {
+                dp[0][i] = (int) Math.pow(10, 9);
+            }
+        }
+        for (int i = 1; i < n; i++) {
+            for (int j = 0; j <= target; j++) {
+                int notTaken = dp[i - 1][j];
+                int taken = (int) Math.pow(10, 9);
+                if (arr[i] <= j) {
+                    taken = 1 + dp[i][j - arr[i]];
+                }
+                dp[i][j] = Math.min(notTaken, taken);
+            }
+        }
+        int ans = dp[n - 1][target];
+        if (ans >= (int) Math.pow(10, 9)) {
+            return -1;
+        }
+        return ans;
+    }
+
     public static void main(String[] args) {
         int coins[] = { 1, 2, 3 };
         int target = 6;
         System.out.println(minimumCoins(coins, target));
         System.out.println(minimumCoinsMemo(coins, target));
+        System.out.println(minimumCoinsTab(coins, target));
+        System.out.println(minimumCoinsSpaceOpti(coins, target));
 
     }
 }
